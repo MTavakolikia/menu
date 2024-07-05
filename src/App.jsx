@@ -30,7 +30,9 @@ function App() {
     try {
       const response = await axios.get("https://fakestoreapi.com/products");
 
-      setProducts(response.data.splice(0, 4));
+      // setProducts(response.data.splice(0, 4));
+
+      setProducts(response.data);
     } catch (error) {
       console.error("Error fetching products:", error);
     }
@@ -182,10 +184,10 @@ function App() {
             key={section.id}
             id={section.id}
             name={section.id}
-            className=" max-h-full  p-8"
+            className="max-h-full p-8"
           >
             <h2 className="text-2xl font-semibold mb-2">{section.title}</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {products.map((product) => (
                 <div key={product.id} className="mb-2">
                   <div className="shadow-xl rounded-md p-4 bg-white">
