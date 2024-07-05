@@ -3,20 +3,21 @@ import axios from "axios";
 import { Link, Element } from "react-scroll";
 import "./App.css";
 import { IoMenuSharp } from "react-icons/io5";
+import { FaRegTimesCircle } from "react-icons/fa";
 
 const sections = [
-  { id: "section1", title: "محصول 1", icon: "🍎" },
-  { id: "section2", title: "محصول 2", icon: "🍊" },
-  { id: "section3", title: "محصول 3", icon: "🍇" },
-  { id: "section4", title: "محصول 4", icon: "🍎" },
-  { id: "section5", title: "محصول 5", icon: "🍊" },
-  { id: "section6", title: "محصول 6", icon: "🍇" },
-  { id: "section7", title: "محصول 7", icon: "🍎" },
-  { id: "section8", title: "محصول 8", icon: "🍊" },
-  { id: "section9", title: "محصول 9", icon: "🍇" },
-  { id: "section10", title: "محصول 10", icon: "🍎" },
-  { id: "section11", title: "محصول 11", icon: "🍊" },
-  { id: "section12", title: "محصول 12", icon: "🍇" },
+  { id: "section1", title: "Product 1", icon: "🍎" },
+  { id: "section2", title: "Product 2", icon: "🍊" },
+  { id: "section3", title: "Product 3", icon: "🍇" },
+  { id: "section4", title: "Product 4", icon: "🍎" },
+  { id: "section5", title: "5 Product", icon: "🍊" },
+  { id: "section6", title: "Product 6", icon: "🍇" },
+  { id: "section7", title: "Product 7", icon: "🍎" },
+  { id: "section8", title: "Product 8", icon: "🍊" },
+  { id: "section9", title: "Product 9", icon: "🍇" },
+  { id: "section10", title: "Product 10", icon: "🍎" },
+  { id: "section11", title: "11Product", icon: "🍊" },
+  { id: "section12", title: "Product 12", icon: "🍇" },
 ];
 
 function App() {
@@ -27,8 +28,9 @@ function App() {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get("https://api.example.com/products");
-      setProducts(response.data);
+      const response = await axios.get("https://fakestoreapi.com/products");
+
+      setProducts(response.data.splice(0, 4));
     } catch (error) {
       console.error("Error fetching products:", error);
     }
@@ -36,7 +38,6 @@ function App() {
 
   useEffect(() => {
     fetchProducts();
-
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -60,7 +61,7 @@ function App() {
           }
         });
       },
-      { threshold: 0.6 }
+      { threshold: 0.6 } // Adjust threshold if necessary
     );
 
     sections.forEach((section) => {
@@ -119,7 +120,17 @@ function App() {
 
   return (
     <div className="relative">
-      <nav className="fixed w-full bg-white shadow flex justify-between p-4">
+      {sidebarOpen && (
+        <div className="h-full w-full bg-slate-600 opacity-50 fixed z-40">
+          <button
+            className="absolute z-50 flex justify-center text-slate-200 items-center left-5 top-5 text-3xl  font-bold py-3 px-5 rounded-full"
+            onClick={() => setSidebarOpen(false)}
+          >
+            <FaRegTimesCircle />
+          </button>
+        </div>
+      )}
+      <nav className="fixed w-full bg-white shadow flex justify-between pt-2">
         <button className="p-2" onClick={() => setSidebarOpen(!sidebarOpen)}>
           <IoMenuSharp />
         </button>
@@ -132,7 +143,9 @@ function App() {
               key={section.id}
               id={`menu-${section.id}`}
               className={`cursor-pointer ${
-                activeSection === section.id ? "text-blue-500 active-item" : ""
+                activeSection === section.id
+                  ? "text-blue-500 animate-text-color-change"
+                  : ""
               }`}
             >
               <Link
@@ -149,41 +162,46 @@ function App() {
         </ul>
       </nav>
       <div
-        className={`fixed top-0 right-0 h-full w-64 bg-gray-800 text-white p-4 transform ${
+        className={`fixed top-0 right-0 z-50 h-full w-64 bg-gray-800 text-white p-4 transform ${
           sidebarOpen ? "translate-x-0" : "translate-x-full"
         } transition-transform`}
       >
         <ul>
+          <li className="py-2 border-b border-gray-700 cursor-pointer">Home</li>
           <li className="py-2 border-b border-gray-700 cursor-pointer">
-            آیتم 1
+            Products
           </li>
           <li className="py-2 border-b border-gray-700 cursor-pointer">
-            آیتم 2
+            About us
           </li>
-          <li className="py-2 border-b border-gray-700 cursor-pointer">
-            آیتم 3
-          </li>
-          {/* آیتم‌های دیگر */}
         </ul>
       </div>
-      <div className="pt-16">
+      <div className="pt-4 section-parents h-full">
         {sections.map((section) => (
           <Element
             key={section.id}
             id={section.id}
             name={section.id}
-            className="h-screen p-8"
+            className=" max-h-full  p-8"
           >
-            <h2 className="text-2xl">{section.title}</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <h2 className="text-2xl font-semibold mb-2">{section.title}</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {products.map((product) => (
-                <div key={product.id} className="border p-4 rounded">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-32 object-cover rounded"
-                  />
-                  <h3 className="mt-2 text-lg">{product.name}</h3>
+                <div key={product.id} className="mb-2">
+                  <div className="shadow-xl rounded-md p-4 bg-white">
+                    <img
+                      src={product.image}
+                      alt={product.title}
+                      className="w-full h-32 object-contain rounded"
+                    />
+                  </div>
+
+                  <h3 className="mt-2 text-sm lg:text-lg truncate">
+                    {product.title}
+                  </h3>
+                  <h5 className="mt-2 text-sm lg:text-lg">
+                    AED {product.price}
+                  </h5>
                 </div>
               ))}
             </div>
